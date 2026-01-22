@@ -2,11 +2,8 @@
 
 ## References and Resources
 
-List any resources used here, or simply put `N/A` if not applicable.
+Hints from https://ualberta-cmput301.github.io/labs/lab3_inst.html
+Documentation from https://developer.android.com/guide/fragments/communicate
 
 ## Verbal Collaboration
-
-| Student Name | CCID      |
-| ------------ | --------- |
-| `student`    | `student` |
-| `<Add more>` | `<CCID>`  |
+N/A
