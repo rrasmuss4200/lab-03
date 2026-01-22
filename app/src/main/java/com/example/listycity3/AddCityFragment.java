@@ -15,13 +15,21 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
 public class AddCityFragment extends DialogFragment {
-
+    private City cityToEdit;
     interface AddCityDialogListener {
         void addCity(City city);
+        void editCity(City newCity, City oldCity);
     }
     private AddCityDialogListener listener;
 
-
+    static AddCityFragment newInstance(City city) {
+        Bundle args = new Bundle();
+        args.putSerializable("city", city);
+        
+        AddCityFragment fragment = new AddCityFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -41,14 +49,31 @@ public class AddCityFragment extends DialogFragment {
         EditText editCityName = view.findViewById(R.id.edit_text_city_text);
         EditText editProvinceName = view.findViewById(R.id.edit_text_province_text);
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        Bundle args = getArguments();
+
+        boolean isEditing = false;
+        if (args != null && args.getSerializable("city") != null) {
+            cityToEdit = (City) args.getSerializable("city");
+            isEditing = true;
+            editCityName.setText(cityToEdit.getName());
+            editProvinceName.setText(cityToEdit.getProvince());
+        }
+
+        final boolean editMode = isEditing;
+
         return builder
                 .setView(view)
-                .setTitle("Add a city")
+                .setTitle("Add or edit a city")
                 .setNegativeButton("Cancel", null)
                 .setPositiveButton("Add", (dialog, which) -> {
                     String cityName = editCityName.getText().toString();
                     String provinceName = editProvinceName.getText().toString();
-                    listener.addCity(new City(cityName, provinceName));
+                    City newCity = new City(cityName, provinceName);
+                    if (editMode) {
+                        listener.editCity(cityToEdit, newCity);
+                    } else {
+                        listener.addCity(newCity);
+                    }
                 })
                 .create();
     }

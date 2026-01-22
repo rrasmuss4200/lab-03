@@ -2,6 +2,7 @@ package com.example.listycity3;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,6 +31,15 @@ public class MainActivity extends AppCompatActivity implements AddCityFragment.A
     }
 
     @Override
+    public void editCity(City oldCity, City newCity) {
+        int position = dataList.indexOf(oldCity);
+        if (position != -1) {
+            dataList.set(position, newCity);
+            cityAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -45,6 +55,14 @@ public class MainActivity extends AppCompatActivity implements AddCityFragment.A
         cityList = findViewById(R.id.city_list);
         cityAdapter = new cityArrayAdapter(this, dataList);
         cityList.setAdapter(cityAdapter);
+
+        cityList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                City selected_city = dataList.get(position);
+                AddCityFragment.newInstance(selected_city).show(getSupportFragmentManager(), "Edit City");
+            }
+        });
 
         FloatingActionButton fab = findViewById(R.id.button_add_city);
         fab.setOnClickListener(v -> {
